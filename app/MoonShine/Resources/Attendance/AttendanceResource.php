@@ -71,8 +71,7 @@ class AttendanceResource extends ModelResource
 
             Text::make('Jam Masuk', 'clock_in')
                 ->setAttribute('type', 'time')
-                ->default(now()->format('H:i'))
-                ->required(),
+                ->default(now()->format('H:i')),
 
             Text::make('Jam Pulang', 'clock_out')
                 ->setAttribute('type', 'time'),

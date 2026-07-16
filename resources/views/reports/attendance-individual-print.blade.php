@@ -17,7 +17,7 @@
             background-repeat: no-repeat;
             background-position: center;
             background-size: contain;
-            opacity: 0.10;                    
+            opacity: 0.05;                    
             z-index: -1;                      
         }
 
@@ -29,7 +29,7 @@
             }
             .no-print { display: none; }
         }
-        body { font-family: Arial, sans-serif; font-size: 12px; color: #333; line-height: 1.4; }
+        body { font-family: Arial, sans-serif; font-size: 11px; color: #333; line-height: 1.2; }
         
         /* 1. KUNCI UTAMA: Bikin container header relatif agar koordinat logo mengacu ke sini */
         .header-container { 
@@ -40,7 +40,7 @@
         }
         
         .header { text-align: left; padding-right: 120px; } /* Beri ruang di kanan agar judul tidak menabrak logo */
-        .header h2 { margin: 0 0 5px 0; font-size: 18px; }
+        .header h2 { margin: 0 0 5px 0; font-size: 16px; }
         
         /* 2. LOGO KANAN ATAS */
         .logo-report {
@@ -54,7 +54,7 @@
         .biodata { margin-bottom: 10px; }
         .biodata td { padding: 4px 4px; border: none; }
         table { width: 100%; border-collapse: collapse; margin-top: 5px; }
-        th, td { border: 1px solid #000; padding: 8px; text-align: left; }
+        th, td { border: 1px solid #000; padding: 4px; text-align: left; }
         th { background-color: #f2f2f2; }
         .text-center { text-align: center; }
         .badge { padding: 3px 6px; border-radius: 3px; font-weight: bold; }
@@ -92,7 +92,7 @@
             <tr>
                 <th width="5%" class="text-center">No</th>
                 <th width="10%">Hari</th>
-                <th width="15%">Tanggal</th>
+                <th width="15%" class="text-center">Tanggal</th>
                 <th width="15%" class="text-center">Jam Masuk</th>
                 <th width="15%" class="text-center">Jam Keluar</th>
                 <th width="15%" class="text-center">Durasi Kerja</th>
@@ -111,17 +111,17 @@
                 <tr class="{{ $isWeekend ? 'bg-light' : '' }}">
                     <td class="text-center">{{ $no }}</td>
                     <td>{{ $date->translatedFormat('l') }}</td>
-                    <td>{{ $date->format('d-m-Y') }}</td>
+                    <td class="text-center">{{ $date->format('d-m-Y') }}</td>
 
                     @if($attendance)
-                        <td class="text-center text-muted">{{ $attendance->clock_in->format('H:i') }}</td>
+                        <td class="text-center text-muted">{{ $attendance->clock_in ? $attendance->clock_in->format('H:i') : '-' }}</td>
                         <td class="text-center text-muted">{{ $attendance->clock_out ? $attendance->clock_out->format('H:i') : '-' }}</td>
                         <td class="text-center text-muted">{{ $attendance->working_hours }} Jam</td>
                         <td>
                             @if($attendance->status === 'terlambat')
                                 <span class="badge badge-warning">Terlambat</span>
                             @else
-                                <span class="badge badge-success">Hadir</span>
+                                <span class="badge badge-success">{{ $attendance->status }}</span>
                             @endif
                         </td>
                     @elseif($isWeekend)
