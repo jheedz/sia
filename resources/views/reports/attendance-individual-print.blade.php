@@ -10,15 +10,15 @@
             position: fixed;
             top: 50%;
             left: 50%;
-            transform: translate(-50%, -50%); /* Menempatkan logo tepat di tengah layar */
-            width: 600px;                      /* Ukuran lebar logo watermark, sesuaikan kebutuhan */
-            height: 600px;                     /* Ukuran tinggi logo watermark */
-            background-image: url("{{ asset('storage/logo/logo.jpg') }}");
+            transform: translate(-50%, -50%); 
+            width: 600px;                     
+            height: 600px;                    
+            background-image: url("{{ Storage::url('logo/logo.jpg') }}");
             background-repeat: no-repeat;
             background-position: center;
             background-size: contain;
-            opacity: 0.20;                     /* KUNCI: Opacity 20% */
-            z-index: -1;                       /* KUNCI: Taruh di paling belakang agar tidak menutupi teks */
+            opacity: 0.10;                    
+            z-index: -1;                      
         }
 
         /* 2. Tambahan khusus untuk browser agar memaksakan background tercetak saat di-print */
@@ -75,7 +75,7 @@
             <h2>Laporan Kehadiran Karyawan Per Periode</h2>
             <div>Bulan: <strong>{{ $monthName }}</strong></div>
         </div>
-        <img src="{{ asset('storage/logo/logo.jpg') }}" class="logo-report" alt="Logo">
+        <img class="logo-report" src="{{ Storage::url('logo/logo.jpg') }}" alt="Logo">
     </div>
 
     <table class="biodata" style="width: auto;">

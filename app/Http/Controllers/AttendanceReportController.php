@@ -38,19 +38,6 @@ class AttendanceReportController extends Controller
 
         return view('reports.attendance-print', compact('employees', 'monthName', 'startDate', 'endDate'));
     }
-    public function exportExcel(Request $request)
-    {
-        $request->validate([
-            'month' => 'required|integer|between:1,12',
-            'year' => 'required|integer',
-        ]);
-
-        $namaBulan = Carbon::createFromDate($request->year, $request->month, 1)->isoFormat('MMMM-YYYY');
-        $namaFile = "Laporan_Absensi_{$namaBulan}.xlsx";
-
-        // Memicu download file Excel otomatis
-        return Excel::download(new AttendanceExport($request->month, $request->year), $namaFile);
-    }
     public function printIndividual(Request $request)
     {
         $request->validate([
@@ -92,6 +79,19 @@ class AttendanceReportController extends Controller
             'attendances'
         ));
     }
+    public function exportExcel(Request $request)
+    {
+        $request->validate([
+            'month' => 'required|integer|between:1,12',
+            'year' => 'required|integer',
+        ]);
+
+        $namaBulan = Carbon::createFromDate($request->year, $request->month, 1)->isoFormat('MMMM-YYYY');
+        $namaFile = "Laporan_Absensi_{$namaBulan}.xlsx";
+
+        // Memicu download file Excel otomatis
+        return Excel::download(new AttendanceExport($request->month, $request->year), $namaFile);
+    }
     public function exportIndividualExcel(Request $request)
     {
         $request->validate([
@@ -102,10 +102,9 @@ class AttendanceReportController extends Controller
 
         $employee = Employee::findOrFail($request->employee_id);
         $namaBulan = Carbon::createFromDate($request->year, $request->month, 1)->isoFormat('MMMM-YYYY');
-        
-        // Format nama file: Laporan_Absen_Andi_Juli-2026.xlsx
         $namaFile = "Laporan_Absen_" . str_replace(' ', '_', $employee->name) . "_{$namaBulan}.xlsx";
 
+        // Pastikan parameter ini dikirim berurutan ke constructor Excel Export
         return Excel::download(new AttendanceIndividualExport($request->employee_id, $request->month, $request->year), $namaFile);
     }
 }
