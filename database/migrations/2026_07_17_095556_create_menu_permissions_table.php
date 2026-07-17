@@ -13,13 +13,15 @@ return new class extends Migration
     {
         Schema::create('menu_permissions', function (Blueprint $table) {
             $table->id();
+            // Relasi ke tabel bawaan MoonShine User Roles
+            $table->foreignId('moonshine_user_role_id')
+                ->constrained('moonshine_user_roles')
+                ->cascadeOnDelete();
+            $table->string('menu_key'); // Menyimpan identitas menu unik (contoh: 'reporting')
             $table->timestamps();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('menu_permissions');

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\MoonShine\Resources\Employee\Pages;
+namespace App\MoonShine\Resources\MenuPermission\Pages;
 
 use MoonShine\Laravel\Pages\Crud\FormPage;
 use MoonShine\Contracts\UI\ComponentContract;
@@ -10,22 +10,25 @@ use MoonShine\Contracts\UI\FormBuilderContract;
 use MoonShine\UI\Components\FormBuilder;
 use MoonShine\Contracts\UI\FieldContract;
 use MoonShine\Contracts\Core\TypeCasts\DataWrapperContract;
-use App\MoonShine\Resources\Employee\EmployeeResource;
+use App\MoonShine\Resources\MenuPermission\MenuPermissionResource;
 use MoonShine\Support\ListOf;
+use MoonShine\UI\Fields\ID;
+use MoonShine\UI\Components\Layout\Box;
 use Throwable;
 
 
 /**
- * @extends FormPage<EmployeeResource>
+ * @extends FormPage<MenuPermissionResource>
  */
-class EmployeeFormPage extends FormPage
+class MenuPermissionFormPage extends FormPage
 {
     /**
      * @return list<ComponentContract|FieldContract>
      */
+    
     protected function fields(): array
     {
-        return $this->getResource()->fields();
+        return $this->getResource()->formFields();
     }
 
     protected function buttons(): ListOf

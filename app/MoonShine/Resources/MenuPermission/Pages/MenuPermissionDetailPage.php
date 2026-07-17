@@ -2,30 +2,31 @@
 
 declare(strict_types=1);
 
-namespace App\MoonShine\Resources\Employee\Pages;
+namespace App\MoonShine\Resources\MenuPermission\Pages;
 
-use MoonShine\Laravel\Pages\Crud\FormPage;
+use MoonShine\Laravel\Pages\Crud\DetailPage;
 use MoonShine\Contracts\UI\ComponentContract;
-use MoonShine\Contracts\UI\FormBuilderContract;
-use MoonShine\UI\Components\FormBuilder;
+use MoonShine\UI\Components\Table\TableBuilder;
 use MoonShine\Contracts\UI\FieldContract;
-use MoonShine\Contracts\Core\TypeCasts\DataWrapperContract;
-use App\MoonShine\Resources\Employee\EmployeeResource;
+use App\MoonShine\Resources\MenuPermission\MenuPermissionResource;
 use MoonShine\Support\ListOf;
+use MoonShine\UI\Fields\ID;
 use Throwable;
 
 
 /**
- * @extends FormPage<EmployeeResource>
+ * @extends DetailPage<MenuPermissionResource>
  */
-class EmployeeFormPage extends FormPage
+class MenuPermissionDetailPage extends DetailPage
 {
     /**
-     * @return list<ComponentContract|FieldContract>
+     * @return list<FieldContract>
      */
-    protected function fields(): array
+    protected function fields(): iterable
     {
-        return $this->getResource()->fields();
+        return [
+            ID::make(),
+        ];
     }
 
     protected function buttons(): ListOf
@@ -33,22 +34,12 @@ class EmployeeFormPage extends FormPage
         return parent::buttons();
     }
 
-    protected function formButtons(): ListOf
-    {
-        return parent::formButtons();
-    }
-
-    protected function rules(DataWrapperContract $item): array
-    {
-        return [];
-    }
-
     /**
-     * @param  FormBuilder  $component
+     * @param  TableBuilder  $component
      *
-     * @return FormBuilder
+     * @return TableBuilder
      */
-    protected function modifyFormComponent(FormBuilderContract $component): FormBuilderContract
+    protected function modifyDetailComponent(ComponentContract $component): ComponentContract
     {
         return $component;
     }

@@ -31,6 +31,7 @@ use App\MoonShine\Resources\Student\StudentResource;
 use App\MoonShine\Resources\Position\PositionResource;
 use App\MoonShine\Pages\AttendanceReportPage;
 use App\MoonShine\Pages\AttendanceIndividualReportPage;
+use App\MoonShine\Resources\MenuPermission\MenuPermissionResource;
 
 class MoonShineServiceProvider extends ServiceProvider
 {
@@ -65,6 +66,7 @@ class MoonShineServiceProvider extends ServiceProvider
                 InventoryResource::class,
                 StudentResource::class,
                 PositionResource::class,
+                MenuPermissionResource::class,
             ])
             ->pages([
                 ...$core->getConfig()->getPages(),
