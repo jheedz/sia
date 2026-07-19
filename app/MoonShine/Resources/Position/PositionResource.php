@@ -6,6 +6,10 @@ namespace App\MoonShine\Resources\Position;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Position;
+
+use MoonShine\Laravel\Fields\Relationships\BelongsTo;
+use App\MoonShine\Resources\Shift\ShiftResource;
+
 use App\MoonShine\Resources\Position\Pages\PositionIndexPage;
 use App\MoonShine\Resources\Position\Pages\PositionFormPage;
 use App\MoonShine\Resources\Position\Pages\PositionDetailPage;
@@ -40,6 +44,9 @@ class PositionResource extends ModelResource
         return [
             Text::make('Kode Jabatan', 'code')->required(),
             Text::make('Nama Jabatan', 'name')->required(),
+            BelongsTo::make('Shift Kerja', 'shift', resource: ShiftResource::class)
+                ->nullable() // Jaga-jaga kalau ada posisi yang tidak punya shift tetap
+                ->searchable(),
         ];
     }
     public function fields(): array
@@ -47,6 +54,7 @@ class PositionResource extends ModelResource
         return [
             Text::make('Kode', 'code')->sortable(),
             Text::make('Nama Jabatan', 'name')->sortable(),
+            Text::make('Shift', 'shift.name')->sortable(),
         ];
     }
 }

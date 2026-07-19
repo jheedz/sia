@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('employees', function (Blueprint $table) {
-            $table->string('address', 200)->nullable()->after('position'); // Kolom alamat
+            $table->string('address', 200)->nullable()->after('position_id'); // Kolom alamat
             $table->date('birthday')->nullable()->after('address');
         });
     }

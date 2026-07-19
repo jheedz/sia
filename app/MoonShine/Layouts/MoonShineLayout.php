@@ -20,6 +20,7 @@ use MoonShine\MenuManager\MenuGroup;
 use MoonShine\MenuManager\MenuItem;
 use App\MoonShine\Pages\AttendanceReportPage;
 use App\MoonShine\Pages\AttendanceIndividualReportPage;
+use App\MoonShine\Resources\Shift\ShiftResource;
 
 
 final class MoonShineLayout extends AppLayout
@@ -59,6 +60,7 @@ final class MoonShineLayout extends AppLayout
                 MenuItem::make(AttendanceIndividualReportPage::class, ' Absensi Karyawan' )->icon('document-chart-bar'), 
             ])->icon('presentation-chart-line'),
             MenuItem::make(AttendanceResource::class, 'Attendances')->icon('clock'),
+            MenuItem::make(ShiftResource::class, 'Shifts'),
         ];
     }
 
