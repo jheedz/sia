@@ -11,7 +11,7 @@ use App\MoonShine\Resources\Attendance\AttendanceResource;
 use App\MoonShine\Resources\Inventory\InventoryResource;
 use App\MoonShine\Resources\Student\StudentResource;
 use App\MoonShine\Resources\Position\PositionResource;
-use App\MoonShine\Resources\MenuPermission\MenuPermissionResource; // Pastikan import ini aman
+use App\MoonShine\Resources\MenuPermission\MenuPermissionResource;
 use MoonShine\ColorManager\ColorManager;
 use MoonShine\ColorManager\Palettes\PurplePalette;
 use MoonShine\Contracts\ColorManager\ColorManagerContract;
@@ -61,11 +61,11 @@ final class MoonShineLayout extends AppLayout
         return [
             // 1. GROUP MANAJEMEN (Otomatis tampil jika salah satu menu di dalamnya aktif)
             MenuGroup::make('Manajemen', [
-                MenuItem::make(MoonShineUserResource::class)
+                MenuItem::make(MoonShineUserResource::class, 'Users')
                     ->icon('users')
                     ->canSee(fn() => $hasAccess('resource_user')),
 
-                MenuItem::make(MoonShineUserRoleResource::class)
+                MenuItem::make(MoonShineUserRoleResource::class, 'Roles')
                     ->icon('shield-check')
                     ->canSee(fn() => $hasAccess('resource_role')),
 
