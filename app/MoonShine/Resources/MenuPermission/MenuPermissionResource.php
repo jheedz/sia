@@ -68,6 +68,7 @@ class MenuPermissionResource extends ModelResource
             // 3. Level Harian/Laporan Individual
             'page_report_all'    => '📊 Page: Laporan Absensi (Semua)',
             'page_report_single' => '👤 Page: Laporan Absensi (Individu)',
+            'resource_shift'     => '⏰ Page: Shifts',
         ];
     }
 
