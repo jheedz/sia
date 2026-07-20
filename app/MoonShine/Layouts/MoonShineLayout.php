@@ -21,6 +21,7 @@ use MoonShine\MenuManager\MenuGroup;
 use MoonShine\MenuManager\MenuItem;
 use App\MoonShine\Pages\AttendanceReportPage;
 use App\MoonShine\Pages\AttendanceIndividualReportPage;
+use App\MoonShine\Resources\Shift\ShiftResource;
 
 final class MoonShineLayout extends AppLayout
 {
@@ -126,6 +127,9 @@ final class MoonShineLayout extends AppLayout
             MenuItem::make(AttendanceResource::class, 'Attendances')
                 ->icon('clock')
                 ->canSee(fn() => $hasAccess('resource_attendance')),
+            MenuItem::make(ShiftResource::class, 'Shifts')
+                ->icon('clock')
+                ->canSee(fn() => $hasAccess('resource_shift')),
         ];
     }
 

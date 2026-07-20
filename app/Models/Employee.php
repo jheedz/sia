@@ -34,6 +34,10 @@ class Employee extends Model
     {
         return $this->belongsTo(Position::class);
     }
+    public function getShiftAttribute()
+    {
+        return $this->position?->shift;
+    }
     public function getNameWithNikAttribute(): string
     {
         // Pastikan nama kolom NIK di database agan disesuaikan (misal: 'nik' atau 'nip')
