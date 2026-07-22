@@ -47,7 +47,7 @@
             position: absolute;
             top: 0;
             right: 0;
-            width: 90px; /* Sesuaikan lebar logo sekolah/perusahaan agan */
+            width: 100px; /* Sesuaikan lebar logo sekolah/perusahaan agan */
             height: auto;
         }
 
@@ -79,7 +79,7 @@
     </div>
 
     <table class="biodata" style="width: auto;">
-        <tr><td><strong>Nama - NIK</strong></td><td>: {{ $employee->name }} - {{ $employee->nik ?? '-' }}</td></tr>
+        <tr><td><strong>Nama - NIK</strong></td><td>: {{ strtoupper($employee->name) }} - {{ $employee->nik ?? '-' }}</td></tr>
         <tr><td><strong>Jabatan</strong></td><td>: {{ $employee->position?->name ?? '-' }}</td></tr>
         <tr>
             <td><strong>Total Jam Kerja</strong></td>
@@ -87,7 +87,7 @@
         </tr>
     </table>
 
-    <table>
+    <table class="table table-bordered">
         <thead>
             <tr>
                 <th width="5%" class="text-center">No</th>
@@ -108,7 +108,7 @@
                     $no = $loop->iteration;
                 @endphp
 
-                <tr class="{{ $isWeekend ? 'bg-light' : '' }}">
+                <tr class="{{ $isWeekend ? 'background: #0d8abc' : '' }}">
                     <td class="text-center">{{ $no }}</td>
                     <td>{{ $date->translatedFormat('l') }}</td>
                     <td class="text-center">{{ $date->format('d-m-Y') }}</td>

@@ -112,6 +112,10 @@ class EmployeeResource extends ModelResource
             Date::make('Tanggal Masuk', 'joined_at')
                 ->required()
                 ->format('d M Y'),
+            Text::make('Alamat', 'address')
+                ->required()
+                ->sortable()
+                ->placeholder('Masukkan alamat...'),
             Image::make('Foto Profil', 'photo')
                 ->dir('employees') 
                 ->allowedExtensions(['jpg', 'jpeg', 'png', 'webp'])

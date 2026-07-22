@@ -12,7 +12,8 @@
         "maatwebsite/excel": "^3.1",
         "moonshine/apexcharts": "^3.1",
         "moonshine/import-export": "^2.0",
-        "moonshine/moonshine": "^4.13"
+        "moonshine/moonshine": "^4.13",
+        "simplesoftwareio/simple-qrcode": "^4.2"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^4.2",

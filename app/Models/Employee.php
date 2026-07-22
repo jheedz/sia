@@ -22,6 +22,7 @@ class Employee extends Model
     // Jika kamu pakai kolom tanggal kustom, daftarkan di sini agar otomatis dikonversi jadi objek Carbon oleh Laravel
     protected $casts = [
         'joined_at' => 'date',
+        'birthday' => 'date',
         'is_active' => 'boolean',
     ];
 

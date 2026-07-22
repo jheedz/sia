@@ -58,6 +58,7 @@ class MenuPermissionResource extends ModelResource
             'resource_role'      => '🛡️ Menu: MoonShine User Role',
             'resource_permission'=> '⚙️ Menu: Hak Akses Menu',
             'resource_position'  => '💼 Menu: Positions',
+            'resource_shift'     => '⏰ Page: Shifts',
 
             // 2. Level Menu/Resource Individual (Data Master & Absen)
             'resource_inventory' => '📦 Menu: Inventories',
@@ -68,7 +69,6 @@ class MenuPermissionResource extends ModelResource
             // 3. Level Harian/Laporan Individual
             'page_report_all'    => '📊 Page: Laporan Absensi (Semua)',
             'page_report_single' => '👤 Page: Laporan Absensi (Individu)',
-            'resource_shift'     => '⏰ Page: Shifts',
         ];
     }
 
