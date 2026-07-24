@@ -39,17 +39,33 @@
                         <td >:</td>
                         <td class="py-3 px-3 font-medium text-gray-800">{{ $item->gender ?? '-' }}</td> 
                     </tr>
+                    <tr>
+                        <td  >Agama</td>
+                        <td >:</td>
+                        <td class="py-3 px-3 font-medium text-gray-800">{{ $item->religion ?? '-' }}</td>
+                    </tr>
                     <tr >
                         <td  >Tanggal Lahir</td>
                         <td >:</td>
                         <td class="py-3 px-3 font-medium text-gray-800">
                             {{ $item->birthday ? \Carbon\Carbon::parse($item->birthday)->translatedFormat('d F Y') : '-' }}
+                            ( {{ $item->age ?? '-' }} tahun )
                         </td>
                     </tr>
                     <tr >
                         <td  >Email</td>
                         <td >:</td>
                         <td class="py-3 px-3 font-medium text-gray-800">{{ $item->email ?? '-' }}</td>
+                    </tr>
+                    <tr >
+                        <td  >No. Telepon / WA</td>
+                        <td >:</td>
+                        <td class="py-3 px-3 font-medium text-gray-800">{{ $item->phone ?? '-' }}</td>
+                    </tr>
+                    <tr>
+                        <td  >Golongan Darah</td>
+                        <td >:</td>
+                        <td class="py-3 px-3 font-medium text-gray-800">{{ $item->blood_type ?? '-' }}</td>
                     </tr>
                     <tr >
                         <td  >Tanggal Bergabung</td>
@@ -67,6 +83,11 @@
                             {{ \Carbon\Carbon::parse($item->position->shift->clock_out)->format('H:i') }} )
 
                         </td>
+                    </tr>
+                    <tr>
+                        <td  >Status Kepegawaian</td>
+                        <td >:</td>
+                        <td class="py-3 px-3 font-medium text-gray-800">{{ $item->employment_status ?? '-' }}</td>
                     </tr>
                     <tr class="odd:bg-white even:bg-gray-50/80 border-b border-gray -100 hover:bg-blue-50/30">
                         <td  >Status Karyawan</td>

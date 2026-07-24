@@ -10,6 +10,7 @@ use MoonShine\UI\Components\Table\TableBuilder;
 use MoonShine\Contracts\UI\FieldContract;
 use App\MoonShine\Resources\Student\StudentResource;
 use MoonShine\Support\ListOf;
+use MoonShine\UI\Components\Layout\Box;
 use MoonShine\UI\Fields\ID;
 use Throwable;
 
@@ -25,6 +26,15 @@ class StudentDetailPage extends DetailPage
     protected function fields(): array
     {
         return $this->getResource()->fields();
+    }
+
+    public function getTitle(): string
+    {
+        $item = $this->getResource()->getItem();
+
+        return $item && !empty($item->name) 
+            ? 'Detail ' . ucwords($item->name) 
+            : 'Detail Siswa';
     }
 
     protected function buttons(): ListOf
@@ -59,8 +69,12 @@ class StudentDetailPage extends DetailPage
      */
     protected function mainLayer(): array
     {
+        $item = $this->getResource()->getItem();
+
         return [
-            ...parent::mainLayer()
+            Box::make([
+                view('admin.student-detail', ['item' => $item])
+            ])
         ];
     }
 

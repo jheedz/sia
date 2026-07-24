@@ -16,4 +16,17 @@ class Student extends Model
         'phone',
         'status',
     ];
+    protected $casts = [
+        'birth_date' => 'date',
+    ];
+    
+    public function getAgeAttribute(): ?int
+    {
+        if (! $this->birth_date) {
+            return null;
+        }
+
+        // Menghitung selisih tahun dari tanggal lahir sampai hari ini
+        return $this->birth_date->age; 
+    }
 }

@@ -55,4 +55,13 @@ class Employee extends Model
 
         return round($totalHours, 1);
     }
+    public function getAgeAttribute(): ?int
+    {
+        if (! $this->birthday) {
+            return null;
+        }
+
+        // Menghitung selisih tahun dari tanggal lahir sampai hari ini
+        return $this->birthday->age; 
+    }
 }

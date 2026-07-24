@@ -21,6 +21,11 @@ use MoonShine\UI\Fields\Select;
 use MoonShine\UI\Fields\Date;
 use MoonShine\UI\Fields\Switcher;
 
+// Layouts
+use MoonShine\UI\Components\Layout\Grid;
+use MoonShine\UI\Components\Layout\Column;
+use MoonShine\UI\Components\Layout\Box;
+
 // Import Core & Support MoonShine v3 yang dibutuhkan
 use MoonShine\Laravel\Resources\ModelResource;
 use MoonShine\Contracts\Core\PageContract;
@@ -74,55 +79,127 @@ class EmployeeResource extends ModelResource
     {
         return ['nik', 'name', 'email'];
     }
-    public function fields(): array
+    public function indexFields(): iterable
     {
         return [
-
-            // Input NIK / Nomor Induk Karyawan
-            Text::make('NIK / NIP', 'nik')
-                ->required()
-                ->placeholder('Contoh: EMP2026001')
-                ->sortable(),
-
-            // Nama Karyawan
-            Text::make('Nama Lengkap', 'name')
-                ->required()
-                ->sortable()
-                ->placeholder('Masukkan nama lengkap...'),
-
-            // Email Karyawan
-            Email::make('Email', 'email')
-                ->required()
-                ->placeholder('alamat@perusahaan.com'),
-
-           BelongsTo::make('Jabatan / Posisi', 'position', resource: PositionResource::class)
-                ->placeholder('Pilih Jabatan')
-                ->required(),
-            
-            Select::make('Jenis Kelamin', 'gender')
-                        ->options([
-                            'Laki-laki' => 'Laki-laki',
-                            'Perempuan' => 'Perempuan',
-                        ])
-                        ->required()
-                        ->searchable(),
-            Date::make('Tanggal Lahir', 'birthday')
-                ->required()
-                ->format('d M Y'),
-            Date::make('Tanggal Masuk', 'joined_at')
-                ->required()
-                ->format('d M Y'),
-            Text::make('Alamat', 'address')
-                ->required()
-                ->sortable()
-                ->placeholder('Masukkan alamat...'),
-            Image::make('Foto Profil', 'photo')
-                ->dir('employees') 
-                ->allowedExtensions(['jpg', 'jpeg', 'png', 'webp'])
-                ->removable(), 
+            Text::make('NIK', 'nik')->sortable(),
+            Text::make('Nama', 'name')->sortable(),
+            Text::make('No. HP', 'phone'),
+            Text::make('Email', 'email'),
+            BelongsTo::make('Jabatan', 'position', 'name'),
+            Select::make('Status Kerja', 'employment_status')
+                ->options([
+                    'permanent'  => 'Tetap',
+                    'contract'   => 'Kontrak',
+                    'probation'  => 'Probation',
+                    'internship' => 'Magang',
+                ])
+                ->badge(fn($status) => match($status) {
+                    'permanent'  => 'success',  // Hijau
+                    'contract'   => 'warning',  // Kuning
+                    'probation'  => 'info',     // Biru
+                    'internship' => 'gray',     // Abu-abu
+                    default      => 'default'
+                }),
+            Image::make('Foto', 'photo'),
             Switcher::make('Status Aktif', 'is_active')
                 ->default(true)
                 ->updateOnPreview(),
+        ];
+    }
+    public function fields(): array
+    {
+        return [
+            Grid::make([
+                // 🔴 KOLOM KIRI: Informasi Personal & Kontak (50% / columnSpan 6)
+                Column::make([
+                    Box::make('Informasi Personal', [
+                        // Nama Karyawan
+                        Text::make('Nama Lengkap', 'name')
+                            ->required()
+                            ->sortable()
+                            ->placeholder('Masukkan nama lengkap...'),
+
+                        // Email Karyawan
+                        Email::make('Email', 'email')
+                            ->required()
+                            ->placeholder('alamat@perusahaan.com'),
+
+                        Text::make('No. Telepon', 'phone')
+                            ->placeholder('Contoh: 08123456789')
+                            ->nullable(),
+
+                        Select::make('Jenis Kelamin', 'gender')
+                            ->options([
+                                'Laki-laki' => 'Laki-laki',
+                                'Perempuan' => 'Perempuan',
+                            ])
+                            ->required()
+                            ->searchable(),
+
+                        Select::make('Golongan Darah', 'blood_type')
+                            ->options([
+                                'A'  => 'A',
+                                'B'  => 'B',
+                                'AB' => 'AB',
+                                'O'  => 'O',
+                            ])
+                            ->searchable(),
+
+                        Select::make('Agama', 'religion')
+                            ->placeholder('Pilih Agama')
+                            ->options([
+                                'Islam'  => 'Islam',
+                                'Kristen'  => 'Kristen',
+                                'Katolik' => 'Katolik',
+                                'Hindu'  => 'Hindu',
+                                'Konghucu'  => 'Konghucu',
+                            ])
+                            ->searchable(),
+
+                        Date::make('Tanggal Lahir', 'birthday')
+                            ->required()
+                            ->format('d M Y'),
+
+                        Text::make('Alamat', 'address')
+                            ->required()
+                            ->sortable()
+                            ->placeholder('Masukkan alamat...'),
+                    ]),
+                ])->columnSpan(6),
+
+                // 🟢 KOLOM KANAN: Informasi Pekerjaan & Foto (50% / columnSpan 6)
+                Column::make([
+                    Box::make('Informasi Kepegawaian', [
+                        // Input NIK / Nomor Induk Karyawan
+                        Text::make('NIK / NIP', 'nik')
+                            ->required()
+                            ->placeholder('Contoh: EMP2026001')
+                            ->sortable(),
+                        Image::make('Foto Profil', 'photo')
+                            ->dir('employees') 
+                            ->allowedExtensions(['jpg', 'jpeg', 'png', 'webp'])
+                            ->removable(),
+                        BelongsTo::make('Jabatan / Posisi', 'position', resource: PositionResource::class)
+                            ->placeholder('Pilih Jabatan')
+                            ->required(),
+
+                        Select::make('Status Kerja', 'employment_status')
+                            ->options([
+                                'Permanent'  => 'Tetap',
+                                'Contract'   => 'Kontrak',
+                                'Probation'  => 'Probation',
+                                'Internship' => 'Magang',
+                            ]),
+                        Date::make('Tanggal Masuk', 'joined_at')
+                            ->required()
+                            ->format('d M Y'),
+                        Switcher::make('Status Aktif', 'is_active')
+                            ->default(true)
+                            ->updateOnPreview(),
+                    ]),
+                ])->columnSpan(6),
+            ])
         ];
     }
 
@@ -133,7 +210,6 @@ class EmployeeResource extends ModelResource
             'name' => ['required', 'string', 'max:200'],
             'address' => ['required', 'string', 'max:200'],
             'email' => ['required', 'email', 'unique:employees,email,' . $item->id],
-            'position' => ['required', 'in:manager,supervisor,staff,intern'],
             'gender' => ['required', 'in:Laki-laki,Perempuan'],
             'photo' => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp', 'max:2048'],
             'joined_at' => ['required', 'date'],

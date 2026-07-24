@@ -28,7 +28,7 @@ class EmployeeIndexPage extends IndexPage
      */
     protected function fields(): array
     {
-        return $this->getResource()->fields();
+        return $this->getResource()->indexFields();
     }
 
     /**
