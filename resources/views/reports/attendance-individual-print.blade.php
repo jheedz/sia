@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <title>Laporan Absensi - {{ $employee->name }}</title>
     <style>
-        /* 1. Tambahkan background watermark ke body menggunakan pseudo-element */
+        /* 1. Watermark background */
         body::before {
             content: "";
             position: fixed;
@@ -21,7 +21,7 @@
             z-index: -1;                      
         }
 
-        /* 2. Tambahan khusus untuk browser agar memaksakan background tercetak saat di-print */
+        /* 2. Media Print Settings */
         @media print {
             body {
                 -webkit-print-color-adjust: exact !important;
@@ -31,36 +31,42 @@
         }
         body { font-family: Arial, sans-serif; font-size: 11px; color: #333; line-height: 1.2; }
         
-        /* 1. KUNCI UTAMA: Bikin container header relatif agar koordinat logo mengacu ke sini */
         .header-container { 
             position: relative; 
-            margin-bottom: 20px; 
-            padding-top: 10px;
-            min-height: 60px; /* Jaga jarak tinggi minimal agar tidak tabrakan */
+            margin-bottom: 10px; 
+            padding-top: 5px;
+            min-height: 60px;
         }
         
-        .header { text-align: left; padding-right: 120px; } /* Beri ruang di kanan agar judul tidak menabrak logo */
+        .header { text-align: left; padding-right: 120px; }
         .header h2 { margin: 0 0 5px 0; font-size: 16px; }
         
-        /* 2. LOGO KANAN ATAS */
         .logo-report {
             position: absolute;
             top: 0;
             right: 0;
-            width: 100px; /* Sesuaikan lebar logo sekolah/perusahaan agan */
+            width: 100px;
             height: auto;
         }
 
-        .biodata { margin-bottom: 10px; }
-        .biodata td { padding: 4px 4px; border: none; }
+        .biodata { margin-bottom: 5px; }
+        .biodata td { padding: 3px 3px; border: none; }
         table { width: 100%; border-collapse: collapse; margin-top: 5px; }
-        th, td { border: 1px solid #000; padding: 4px; text-align: left; }
+        th, td { border: 1px solid #000; padding: 3px; text-align: left; }
         th { background-color: #f2f2f2; }
         .text-center { text-align: center; }
-        .badge { padding: 3px 6px; border-radius: 3px; font-weight: bold; }
-        .badge-hadir { background: #e6f4ea; color: #137333; }
-        .badge-absen { background: #fce8e6; color: #c5221f; }
-        @media print { .no-print { display: none; } }
+        
+        /* Badges Style */
+        .badge { padding: 3px 6px; border-radius: 3px; font-weight: bold; font-size: 10px; display: inline-block; }
+        .badge-success { background: #e6f4ea; color: #137333; }
+        .badge-warning { background: #fef7e0; color: #b06000; }
+        .badge-danger { background: #fce8e6; color: #c5221f; }
+        .badge-secondary { background: #e8eaed; color: #3c4043; }
+        .badge-holiday { background: #fce8e6; color: #b91c1c; border: 1px solid #f87171; }
+
+        /* Row Highlights */
+        .row-weekend { background-color: #f8fafc !important; }
+        .row-holiday { background-color: #fef2f2 !important; }
     </style>
 </head>
 <body>
@@ -91,49 +97,67 @@
         <thead>
             <tr>
                 <th width="5%" class="text-center">No</th>
-                <th width="10%">Hari</th>
-                <th width="15%" class="text-center">Tanggal</th>
+                <th width="12%">Hari</th>
+                <th width="13%" class="text-center">Tanggal</th>
                 <th width="15%" class="text-center">Jam Masuk</th>
                 <th width="15%" class="text-center">Jam Keluar</th>
                 <th width="15%" class="text-center">Durasi Kerja</th>
-                <th width="15%" class="text-center">Status</th>
+                <th width="25%" class="text-center">Status / Keterangan</th>
             </tr>
         </thead>
         <tbody>
             @foreach($calendarRange as $date)
                 @php
                     $formattedDate = $date->format('Y-m-d');
-                    $attendance = $attendances->get($formattedDate);
-                    $isWeekend = $date->isWeekend(); 
-                    $no = $loop->iteration;
+                    $attendance    = $attendances->get($formattedDate);
+                    $isWeekend     = $date->isWeekend(); 
+                    $isHoliday     = array_key_exists($formattedDate, $holidays ?? []);
+                    $no            = $loop->iteration;
+
+                    // Tentukan class baris untuk styling
+                    $rowClass = '';
+                    if ($isHoliday) {
+                        $rowClass = 'row-holiday';
+                    } elseif ($isWeekend) {
+                        $rowClass = 'row-weekend';
+                    }
                 @endphp
 
-                <tr class="{{ $isWeekend ? 'background: #0d8abc' : '' }}">
+                <tr class="{{ $rowClass }}">
                     <td class="text-center">{{ $no }}</td>
                     <td>{{ $date->translatedFormat('l') }}</td>
                     <td class="text-center">{{ $date->format('d-m-Y') }}</td>
 
                     @if($attendance)
-                        <td class="text-center text-muted">{{ $attendance->clock_in ? $attendance->clock_in->format('H:i') : '-' }}</td>
-                        <td class="text-center text-muted">{{ $attendance->clock_out ? $attendance->clock_out->format('H:i') : '-' }}</td>
-                        <td class="text-center text-muted">{{ $attendance->working_hours }} Jam</td>
-                        <td>
+                        <td class="text-center">{{ $attendance->clock_in ? (is_string($attendance->clock_in) ? date('H:i', strtotime($attendance->clock_in)) : $attendance->clock_in->format('H:i')) : '-' }}</td>
+                        <td class="text-center">{{ $attendance->clock_out ? (is_string($attendance->clock_out) ? date('H:i', strtotime($attendance->clock_out)) : $attendance->clock_out->format('H:i')) : '-' }}</td>
+                        <td class="text-center">{{ $attendance->working_hours ?? '-' }} Jam</td>
+                        <td class="text-center">
                             @if($attendance->status === 'terlambat')
                                 <span class="badge badge-warning">Terlambat</span>
                             @else
-                                <span class="badge badge-success">{{ $attendance->status }}</span>
+                                <span class="badge badge-success">{{ ucfirst($attendance->status) }}</span>
                             @endif
                         </td>
+                    @elseif($isHoliday)
+                        <td class="text-center text-muted">-</td>
+                        <td class="text-center text-muted">-</td>
+                        <td class="text-center text-muted">-</td>
+                        <td class="text-center">
+                            <span class="badge badge-holiday">
+                                🎈 {{ $holidays[$formattedDate] }}
+                            </span>
+                        </td>
                     @elseif($isWeekend)
-                        <td class="text-center text-muted"><em>-</em></td>
                         <td class="text-center text-muted">-</td>
                         <td class="text-center text-muted">-</td>
-                        <td><span class="badge badge-secondary">Libur</span></td>
+                        <td class="text-center text-muted">-</td>
+                        <td class="text-center"><span class="badge badge-secondary">Week End</span></td>
                     @else
                         <td class="text-center text-danger">-</td>
                         <td class="text-center text-danger">-</td>
                         <td class="text-center text-danger">-</td>
-                        <td><span class="badge badge-danger">Alpha</span></td>
+                        <td class="text-center"><span class="badge badge-danger">Alpha</span></td>
                     @endif
                 </tr>
             @endforeach

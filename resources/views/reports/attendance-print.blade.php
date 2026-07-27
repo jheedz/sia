@@ -50,18 +50,10 @@
                     <td>{{ $emp->name }}</td>
                     <td>{{ $emp->nik }}</td>
                     <td>{{ $emp->position?->name ?? '-' }}</td>
-                    <td class="text-center">
-                        {{ $emp->attendances->whereIn('status', ['hadir','terlambat'])->count() }}
-                    </td>
-                    <td class="text-center">
-                        {{ $emp->attendances->where('status', 'terlambat')->count() }}
-                    </td>
-                    <td class="text-center">
-                        {{ $emp->attendances->where('status', 'izin')->count() }}
-                    </td>
-                    <td class="text-center">
-                        <strong>{{ $emp->totalWorkingHours($startDate, $endDate) }}</strong> Jam
-                    </td>
+                    <td class="text-center">{{ $emp->attendances->whereIn('status', ['hadir','terlambat'])->count() }}</td>
+                    <td class="text-center">{{ $emp->attendances->where('status', 'terlambat')->count() }}</td>
+                    <td class="text-center">{{ $emp->attendances->where('status', 'izin')->count() }}</td>
+                    <td class="text-center"><strong>{{ $emp->totalWorkingHours($startDate, $endDate) }}</strong> Jam</td>
                 </tr>
             @endforeach
         </tbody>

@@ -23,6 +23,7 @@ use MoonShine\MenuManager\MenuItem;
 use App\MoonShine\Pages\AttendanceReportPage;
 use App\MoonShine\Pages\AttendanceIndividualReportPage;
 use App\MoonShine\Resources\Shift\ShiftResource;
+use App\MoonShine\Resources\Holiday\HolidayResource;
 
 final class MoonShineLayout extends AppLayout
 {
@@ -44,7 +45,8 @@ final class MoonShineLayout extends AppLayout
         
         // 1. KOREKSI DI SINI: Jika tidak ada user login, return array kosong saja demi keamanan
         if (!$user) {
-            return [];
+            return [    MenuItem::make(HolidayResource::class, 'Holidays'),
+        ];
         }
 
         // Jika Super User (Admin Utama), loloskan semua tanpa cek DB
@@ -103,13 +105,17 @@ final class MoonShineLayout extends AppLayout
                 MenuItem::make(ShiftResource::class, 'Shifts')
                     ->icon('clock')
                     ->canSee(fn() => $hasAccess('resource_shift')),
+                MenuItem::make(HolidayResource::class, 'Holidays')
+                    ->icon('calendar')
+                    ->canSee(fn() => $hasAccess('resource_holiday')),
             ])
             ->icon('folder')
             ->canSee(fn() => 
                 $hasAccess('resource_inventory') || 
                 $hasAccess('resource_student') || 
                 $hasAccess('resource_employee') || 
-                $hasAccess('resource_shift')
+                $hasAccess('resource_shift') || 
+                $hasAccess('resource_holiday')
             ), // 🟢 BISA DILIHAT JIKA SALAH SATU MENU DI DALAMNYA AKTIF
 
             // 3. GROUP REPORTING
