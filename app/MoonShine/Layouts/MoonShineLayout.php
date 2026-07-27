@@ -17,6 +17,7 @@ use MoonShine\ColorManager\Palettes\PurplePalette;
 use MoonShine\Contracts\ColorManager\ColorManagerContract;
 use MoonShine\Contracts\ColorManager\PaletteContract;
 use MoonShine\Laravel\Layouts\AppLayout;
+use MoonShine\UI\Components\Layout\Footer;
 use MoonShine\MenuManager\MenuGroup;
 use MoonShine\MenuManager\MenuItem;
 use App\MoonShine\Pages\AttendanceReportPage;
@@ -88,9 +89,6 @@ final class MoonShineLayout extends AppLayout
 
             // 2. GROUP DATA MASTER
             MenuGroup::make('Data Master', [
-                MenuItem::make(InventoryResource::class, 'Inventories')
-                    ->icon('briefcase')
-                    ->canSee(fn() => $hasAccess('resource_inventory')),
 
                 MenuItem::make(StudentResource::class, 'Students')
                     ->icon('academic-cap')
@@ -99,12 +97,19 @@ final class MoonShineLayout extends AppLayout
                 MenuItem::make(EmployeeResource::class, 'Employees')
                     ->icon('users')
                     ->canSee(fn() => $hasAccess('resource_employee')),
+                MenuItem::make(InventoryResource::class, 'Inventories')
+                    ->icon('briefcase')
+                    ->canSee(fn() => $hasAccess('resource_inventory')),
+                MenuItem::make(ShiftResource::class, 'Shifts')
+                    ->icon('clock')
+                    ->canSee(fn() => $hasAccess('resource_shift')),
             ])
-            ->icon('bars-2')
+            ->icon('folder')
             ->canSee(fn() => 
                 $hasAccess('resource_inventory') || 
                 $hasAccess('resource_student') || 
-                $hasAccess('resource_employee')
+                $hasAccess('resource_employee') || 
+                $hasAccess('resource_shift')
             ), // 🟢 BISA DILIHAT JIKA SALAH SATU MENU DI DALAMNYA AKTIF
 
             // 3. GROUP REPORTING
@@ -127,12 +132,13 @@ final class MoonShineLayout extends AppLayout
             MenuItem::make(AttendanceResource::class, 'Attendances')
                 ->icon('clock')
                 ->canSee(fn() => $hasAccess('resource_attendance')),
-            MenuItem::make(ShiftResource::class, 'Shifts')
-                ->icon('clock')
-                ->canSee(fn() => $hasAccess('resource_shift')),
         ];
     }
-
+    protected function getFooterComponent(): Footer
+    {
+        return Footer::make()
+            ->copyright('© ' . date('Y') . ' SIA - Sistem Informasi Akademik');
+    }
     /**
      * @param ColorManager $colorManager
      */

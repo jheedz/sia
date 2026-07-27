@@ -35,8 +35,11 @@
             <tr>
                 <th width="5%" class="text-center">No</th>
                 <th>Nama Karyawan</th>
+                <th>NIP</th>
                 <th>Jabatan</th>
-                <th class="text-center">Hadir (Hari)</th>
+                <th class="text-center">Hadir</th>
+                <th class="text-center">Terlambat</th>
+                <th class="text-center">Izin / Sakit</th>
                 <th class="text-center">Jam Kerja</th>
             </tr>
         </thead>
@@ -45,10 +48,16 @@
                 <tr>
                     <td class="text-center">{{ $index + 1 }}</td>
                     <td>{{ $emp->name }}</td>
+                    <td>{{ $emp->nik }}</td>
                     <td>{{ $emp->position?->name ?? '-' }}</td>
                     <td class="text-center">
-                        {{-- Menghitung total jumlah hadir di bulan tersebut --}}
-                        {{ $emp->attendances->where('status', 'hadir')->count() }}
+                        {{ $emp->attendances->whereIn('status', ['hadir','terlambat'])->count() }}
+                    </td>
+                    <td class="text-center">
+                        {{ $emp->attendances->where('status', 'terlambat')->count() }}
+                    </td>
+                    <td class="text-center">
+                        {{ $emp->attendances->where('status', 'izin')->count() }}
                     </td>
                     <td class="text-center">
                         <strong>{{ $emp->totalWorkingHours($startDate, $endDate) }}</strong> Jam
