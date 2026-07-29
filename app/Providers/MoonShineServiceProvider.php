@@ -34,6 +34,7 @@ use App\MoonShine\Pages\AttendanceIndividualReportPage;
 use App\MoonShine\Resources\Shift\ShiftResource;
 use App\MoonShine\Resources\MenuPermission\MenuPermissionResource;
 use App\MoonShine\Resources\Holiday\HolidayResource;
+use App\MoonShine\Resources\Registration\RegistrationResource;
 
 class MoonShineServiceProvider extends ServiceProvider
 {
@@ -71,6 +72,7 @@ class MoonShineServiceProvider extends ServiceProvider
                 ShiftResource::class,
                 MenuPermissionResource::class,
                 HolidayResource::class,
+                RegistrationResource::class,
             ])
             ->pages([
                 ...$core->getConfig()->getPages(),

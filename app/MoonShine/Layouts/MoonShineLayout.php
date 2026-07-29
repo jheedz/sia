@@ -24,6 +24,7 @@ use App\MoonShine\Pages\AttendanceReportPage;
 use App\MoonShine\Pages\AttendanceIndividualReportPage;
 use App\MoonShine\Resources\Shift\ShiftResource;
 use App\MoonShine\Resources\Holiday\HolidayResource;
+use App\MoonShine\Resources\Registration\RegistrationResource;
 
 final class MoonShineLayout extends AppLayout
 {
@@ -45,8 +46,7 @@ final class MoonShineLayout extends AppLayout
         
         // 1. KOREKSI DI SINI: Jika tidak ada user login, return array kosong saja demi keamanan
         if (!$user) {
-            return [    MenuItem::make(HolidayResource::class, 'Holidays'),
-        ];
+            return [];
         }
 
         // Jika Super User (Admin Utama), loloskan semua tanpa cek DB
@@ -138,6 +138,10 @@ final class MoonShineLayout extends AppLayout
             MenuItem::make(AttendanceResource::class, 'Attendances')
                 ->icon('clock')
                 ->canSee(fn() => $hasAccess('resource_attendance')),
+            // 5. MENU MANDIRI (Registrations)
+            MenuItem::make(RegistrationResource::class, 'Registrations')
+                ->icon('clipboard-document-list')
+                ->canSee(fn() => $hasAccess('resource_registration')),
         ];
     }
     protected function getFooterComponent(): Footer

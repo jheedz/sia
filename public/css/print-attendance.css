@@ -1,0 +1,94 @@
+:root {
+    --primary-color: #0d8abc;
+    --text-color: #333333;
+    --border-color: #000000;
+    --bg-table-header: #f2f2f2;
+    --bg-weekend: #f8fafc;
+    --bg-holiday: #fef2f2;
+}
+
+* { box-sizing: border-box; }
+
+body {
+    font-family: Arial, sans-serif;
+    font-size: 11px;
+    color: var(--text-color);
+    line-height: 1.2;
+    margin: 0;
+    padding: 20px;
+}
+
+body::before {
+    content: "";
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 600px;
+    height: 600px;
+    background-image: var(--logo-url);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+    opacity: 0.05;
+    z-index: -1;
+}
+
+.header-container { position: relative; margin-bottom: 20px; padding-top: 10px; min-height: 60px; }
+.header { text-align: left; padding-right: 120px; }
+.header h2 { margin: 0 0 5px 0; font-size: 16px; }
+.logo-report { position: absolute; top: 0; right: 0; width: 100px; height: auto; }
+
+.table-biodata { width: auto; margin-bottom: 10px; border-collapse: collapse; }
+.table-biodata td { padding: 4px 6px; border: none; }
+
+/* Table Styling */
+.table-report { width: 100%; border-collapse: collapse; margin-top: 5px; }
+.table-report th, .table-report td { border: 1px solid var(--border-color); padding: 5px; text-align: left; }
+.table-report th { background-color: var(--bg-table-header); font-weight: bold; }
+
+/* Column Widths & Alignments (Fix Alignment di Sini) */
+.col-no       { width: 5%;  text-align: center !important; }
+.col-day      { width: 12%; text-align: left !important; }
+.col-date     { width: 13%; text-align: center !important; }
+.col-time     { width: 14%; text-align: center !important; }
+.col-duration { width: 14%; text-align: center !important; }
+.col-status   { width: 20%; text-align: center !important; }
+
+.row-weekend { background-color: var(--bg-weekend) !important; }
+.row-holiday { background-color: var(--bg-holiday) !important; }
+
+/* Helpers Overrides */
+.text-center { text-align: center !important; }
+.text-left   { text-align: left !important; }
+.text-right  { text-align: right !important; }
+
+.text-muted  { color: #6c757d; }
+.text-danger { color: #dc3545; }
+
+/* Badges */
+.badge { display: inline-block; padding: 3px 6px; border-radius: 3px; font-weight: bold; font-size: 10px; }
+.badge-success { background: #e6f4ea; color: #137333; }
+.badge-warning { background: #fef7e0; color: #b06000; }
+.badge-danger  { background: #fce8e6; color: #c5221f; }
+.badge-secondary { background: #e8eaed; color: #3c4043; }
+.badge-holiday { background: #fce8e6; color: #b91c1c; border: 1px solid #f87171; }
+
+.btn-print {
+    padding: 8px 15px;
+    background: var(--primary-color);
+    color: #ffffff;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+    font-weight: bold;
+}
+
+@media print {
+    body {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+        padding: 0;
+    }
+    .no-print { display: none !important; }
+}
