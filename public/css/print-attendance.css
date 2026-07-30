@@ -34,17 +34,17 @@ body::before {
     z-index: -1;
 }
 
-.header-container { position: relative; margin-bottom: 20px; padding-top: 10px; min-height: 60px; }
+.header-container { position: relative; margin-bottom: 10px; padding-top: 10px; min-height: 60px; }
 .header { text-align: left; padding-right: 120px; }
 .header h2 { margin: 0 0 5px 0; font-size: 16px; }
 .logo-report { position: absolute; top: 0; right: 0; width: 100px; height: auto; }
 
 .table-biodata { width: auto; margin-bottom: 10px; border-collapse: collapse; }
-.table-biodata td { padding: 4px 6px; border: none; }
+.table-biodata td { padding: 2px 3px; border: none; }
 
 /* Table Styling */
-.table-report { width: 100%; border-collapse: collapse; margin-top: 5px; }
-.table-report th, .table-report td { border: 1px solid var(--border-color); padding: 5px; text-align: left; }
+.table-report { width: 100%; border-collapse: collapse; margin-top: 3%; }
+.table-report th, .table-report td { border: 1px solid var(--border-color); padding: 3px; text-align: left; }
 .table-report th { background-color: var(--bg-table-header); font-weight: bold; }
 
 /* Column Widths & Alignments (Fix Alignment di Sini) */

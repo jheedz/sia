@@ -16,6 +16,7 @@ use App\MoonShine\Resources\Position\PositionResource;
 // Import Fields MoonShine v3
 use MoonShine\UI\Fields\ID;
 use MoonShine\UI\Fields\Text;
+use MoonShine\UI\Fields\Textarea;
 use MoonShine\UI\Fields\Email;
 use MoonShine\UI\Fields\Select;
 use MoonShine\UI\Fields\Date;
@@ -161,7 +162,7 @@ class EmployeeResource extends ModelResource
                             ->required()
                             ->format('d M Y'),
 
-                        Text::make('Alamat', 'address')
+                        Textarea::make('Alamat', 'address')
                             ->required()
                             ->sortable()
                             ->placeholder('Masukkan alamat...'),
