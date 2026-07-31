@@ -21,3 +21,5 @@ Schedule::command('report:fetch-trx-pbi-settlement')
     ->dailyAt('00:11')
     ->withoutOverlapping()
     ->appendOutputTo(storage_path('logs/trx-pbi-settlement-fetch.log'));
+
+Schedule::command('telegram:poll-attendance')->everyMinute();

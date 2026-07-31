@@ -19,6 +19,15 @@ class Employee extends Model
     // Izinkan kolom-kolom ini diisi oleh MoonShine
     protected $guarded = []; 
 
+    protected $fillable = [
+        'nip',
+        'name',
+        'email',
+        'phone',
+        'telegram_chat_id', // Tambahkan ini
+        'position_id',
+        'status',
+    ];
     // Jika kamu pakai kolom tanggal kustom, daftarkan di sini agar otomatis dikonversi jadi objek Carbon oleh Laravel
     protected $casts = [
         'joined_at' => 'date',
