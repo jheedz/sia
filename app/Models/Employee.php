@@ -24,7 +24,7 @@ class Employee extends Model
         'name',
         'email',
         'phone',
-        'telegram_chat_id', // Tambahkan ini
+        'telegram_chat_id',
         'position_id',
         'status',
     ];

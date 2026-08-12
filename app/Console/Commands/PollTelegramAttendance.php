@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Console\Commands;
 
 use App\Models\Employee;
@@ -11,12 +12,11 @@ use Illuminate\Support\Facades\Cache;
 class PollTelegramAttendance extends Command
 {
     protected $signature = 'telegram:poll-attendance';
-    protected $description = 'Memantau dan memproses pesan masuk dari Telegram untuk absensi karyawan (Serta Lokasi GPS)';
+    protected $description = 'Memantau dan memproses pesan masuk dari Telegram untuk absensi karyawan (Serta Lokasi GPS & Shift via Position)';
 
     // CONFIG KOORDINAT KANTOR & RADIUS MAKSIMAL (Dalam Meter)
-    // Silakan sesuaikan dengan koordinat lokasi kantor agan
-    protected float $officeLat = -6.203770;  // Contoh: Latitude Kantor
-    protected float $officeLng = 106.803287; // Contoh: Longitude Kantor
+    protected float $officeLat = -6.203770;  // Latitude Kantor
+    protected float $officeLng = 106.803287; // Longitude Kantor
     protected int $maxRadius   = 100;        // Maksimal jarak 100 meter dari kantor
 
     public function handle(TelegramService $telegram)
@@ -43,9 +43,10 @@ class PollTelegramAttendance extends Command
             // Cek apakah user mengirimkan Lokasi GPS
             $location = $message['location'] ?? null;
 
-            // 1. Cari Karyawan Berdasarkan telegram_chat_id
-            // Be explicit with operator and boolean to satisfy method signature in this environment
-            $employee = Employee::where('telegram_chat_id', '=', $chatId, 'and')->first();
+            // 1. Cari Karyawan beserta Position dan Shift bertingkat (position.shift)
+            $employee = Employee::with('position.shift')
+                ->where('telegram_chat_id', '=', $chatId, 'and')
+                ->first();
 
             if (!$employee) {
                 $reply = "⚠️ <b>Akses Ditolak</b>\n" .
@@ -76,7 +77,28 @@ class PollTelegramAttendance extends Command
                     continue;
                 }
 
-                // Proses Absen Masuk dengan Lokasi
+                // --- 2. PENGECEKAN SHIFT LEWAT ACCESSOR ($employee->shift) ---
+                $shift    = $employee->shift; // Mengakses position->shift
+                $status   = 'Hadir';
+                $lateNote = '';
+
+                if ($shift && !empty($shift->clock_in)) {
+                    // Carbon parsing jam masuk shift hari ini
+                    $shiftStartTime = Carbon::parse($today . ' ' . $shift->clock_in);
+
+                    if ($now->greaterThan($shiftStartTime)) {
+                        $diffInMinutes = $now->diffInMinutes($shiftStartTime);
+                        $status   = 'Terlambat ⚠️';
+                        $lateNote = "\n(Jam Shift: {$shift->clock_in})";
+                    }
+                } else {
+                    // Fallback jika posisi karyawan belum punya/set shift
+                    if ($now->format('H:i') > '08:00') {
+                        $status = 'Terlambat';
+                    }
+                }
+
+                // Proses Absen Masuk dengan Lokasi & Shift ID
                 $attendance = Attendance::firstOrCreate(
                     [
                         'employee_id' => $employee->id,
@@ -84,18 +106,21 @@ class PollTelegramAttendance extends Command
                     ],
                     [
                         'clock_in'  => $now->toTimeString(),
-                        'status'    => $now->format('H:i') > '08:00' ? 'Terlambat' : 'Hadir',
+                        'status'    => $status,
                         'latitude'  => $userLat,
                         'longitude' => $userLng,
                     ]
                 );
 
                 if ($attendance->wasRecentlyCreated) {
+                    $shiftName = $shift ? $shift->name : 'Non-Shift';
                     $reply = "✅ <b>Absen Masuk Berhasil!</b>\n\n" .
                              "Nama: <b>{$employee->name}</b>\n" .
-                             "Jam: <b>{$now->format('H:i:s')} WIB</b>\n" .
-                             "Jarak Kantor: <b>{$distance} meter</b>\n" .
-                             "Status: <b>{$attendance->status}</b>";
+                             "Posisi: <b>" . ($employee->position?->name ?? '-') . "</b>\n" .
+                             "Shift: <b>{$shiftName}</b>\n" .
+                             "Jam Masuk: <b>{$now->format('H:i:s')} WIB</b>\n" .
+                            //  "Jarak Kantor: <b>{$distance} meter</b>\n" .
+                             "Status: <b>{$status}</b>" . $lateNote;
                 } else {
                     $reply = "ℹ️ Anda sudah melakukan Absen Masuk hari ini pada pukul <b>{$attendance->clock_in} WIB</b>.";
                 }
@@ -106,7 +131,12 @@ class PollTelegramAttendance extends Command
 
             // Skenario B: Pesan Teks Biasa
             if (in_array($text, ['absen', 'masuk', 'absen masuk', '/masuk', '/start'])) {
-                $reply = "📍 <b>Kirimkan Lokasi Anda</b>\n\n" .
+                $shift = $employee->shift;
+                $shiftInfo = ($shift && $shift->clock_in)
+                    ? "\nShift: <b>{$shift->name}</b> (" . substr($shift->clock_in, 0, 5) . " - " . substr($shift->clock_out, 0, 5) . " WIB)" 
+                    : "";
+
+                $reply = "📍 <b>Kirimkan Lokasi Anda</b>{$shiftInfo}\n\n" .
                          "Untuk melakukan Absen Masuk, silakan klik tombol <b>Attachment (📎)</b> -> pilih <b>Location (📍)</b> -> lalu pilih <b>Send My Current Location</b>.";
                 $telegram->sendMessage($chatId, $reply);
 
