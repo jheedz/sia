@@ -86,22 +86,9 @@ class EmployeeResource extends ModelResource
             Text::make('NIK', 'nik')->sortable(),
             Text::make('Nama', 'name')->sortable(),
             Text::make('No. HP', 'phone'),
+            Text::make('Chat ID Telegram', 'telegram_chat_id'),
             Text::make('Email', 'email'),
             BelongsTo::make('Jabatan', 'position', 'name'),
-            Select::make('Status Kerja', 'employment_status')
-                ->options([
-                    'permanent'  => 'Tetap',
-                    'contract'   => 'Kontrak',
-                    'probation'  => 'Probation',
-                    'internship' => 'Magang',
-                ])
-                ->badge(fn($status) => match($status) {
-                    'permanent'  => 'success',  // Hijau
-                    'contract'   => 'warning',  // Kuning
-                    'probation'  => 'info',     // Biru
-                    'internship' => 'gray',     // Abu-abu
-                    default      => 'default'
-                }),
             Image::make('Foto', 'photo'),
             Switcher::make('Status Aktif', 'is_active')
                 ->default(true)
@@ -128,6 +115,10 @@ class EmployeeResource extends ModelResource
 
                         Text::make('No. Telepon', 'phone')
                             ->placeholder('Contoh: 08123456789')
+                            ->nullable(),
+
+                        Text::make('Chat ID Telegram', 'telegram_chat_id')
+                            ->placeholder('Masukkan Chat ID Telegram')
                             ->nullable(),
 
                         Select::make('Jenis Kelamin', 'gender')
@@ -163,7 +154,6 @@ class EmployeeResource extends ModelResource
                             ->format('d M Y'),
 
                         Textarea::make('Alamat', 'address')
-                            ->required()
                             ->sortable()
                             ->placeholder('Masukkan alamat...'),
                     ]),
