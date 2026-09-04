@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use App\Models\Employee;
 use App\Models\Attendance;
 use App\Services\TelegramService;
+use App\Services\TicketHandler;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Cache;
@@ -19,7 +20,7 @@ class PollTelegramAttendance extends Command
     protected float $officeLng = 106.803287; // Longitude Kantor
     protected int $maxRadius   = 100;        // Maksimal jarak 100 meter dari kantor
 
-    public function handle(TelegramService $telegram)
+    public function handle(TelegramService $telegram, TicketHandler $ticketHandler)
     {
         $offset = Cache::get('telegram_last_update_id', 0);
         $updates = $telegram->getUpdates($offset);
@@ -126,6 +127,11 @@ class PollTelegramAttendance extends Command
                 }
 
                 $telegram->sendMessage($chatId, $reply);
+                continue;
+            }
+            // Skenario B: Fitur TIKETING / LOGBOOK
+            if (str_starts_with($text, '/tiket') || str_starts_with($text, 'tiket') || str_starts_with($text, '/lapor')) {
+                $ticketHandler->handle($telegram, $employee, $text);
                 continue;
             }
 
